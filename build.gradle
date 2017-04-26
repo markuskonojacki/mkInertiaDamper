@@ -1,7 +1,10 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url = "http://files.minecraftforge.net/maven" }
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
@@ -10,9 +13,18 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 //Only edit below this line, the above code adds and enables the nessasary things for Forge to be setup.
 
+// Define properties file
+ext.configFile = file "build.properties"
 
-version = "1.0"
-group= "it.slay.mkInertiaDamper" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+configFile.withReader {
+    // Load config.  It shall from now be referenced as simply config or project.config
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+version = "${config.minecraft_version}-${config.mod_version}"
+group = "it.slay.mkInertiaDamper" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "mkInertiaDamper"
 
 sourceCompatibility = targetCompatibility = "1.6" // Need this here so eclipse task generates correctly.
@@ -21,16 +33,14 @@ compileJava {
 }
 
 minecraft {
-    version = "1.10.2-latest"
+    version = config.minecraft_version + "-" + config.forge_version
     runDir = "run"
-    
-    // the mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   snapshot are built nightly.
-    // stable_#            stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not allways work.
-    // simply re-run your setup task after changing the mappings to update your workspace.
-    mappings = "snapshot_20161111"
-    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
+
+    mappings = "${config.mappings}"
+    replace '${mod_version}', project.config.mod_version
+    replaceIn "InertiaDamper.java"
+
+    makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 }
 
 dependencies {

@@ -1,15 +1,15 @@
 [
 {
-  "modid": "assets.mkinertiadamper",
+  "modid": "mkinertiadamper",
   "name": "mkInertiaDamper",
-  "description": "While flying stops the player going forward without pressing the forward key.",
+  "description": "While flying stops the player almost immediately when not pressing any directional keys",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "http://slay.it",
   "updateUrl": "",
   "authorList": ["slayit"],
   "credits": "",
-  "logoFile": "",
+  "logoFile": "assets/mkinertiadamper/logo.png",
   "screenshots": [],
   "dependencies": []
 }
